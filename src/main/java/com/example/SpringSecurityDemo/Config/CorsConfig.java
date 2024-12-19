@@ -14,6 +14,7 @@ import java.util.List;
 public class CorsConfig implements WebMvcConfigurer {
 
 
+
     
     @Override
     public void addCorsMappings(CorsRegistry registry) {
