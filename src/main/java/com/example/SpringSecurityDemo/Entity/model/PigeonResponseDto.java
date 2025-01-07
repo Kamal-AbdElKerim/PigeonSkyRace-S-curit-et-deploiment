@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Setter
 @ToString
 public class PigeonResponseDto {
-    private String ringNumber;
+    private Long ringNumber;
     private String gender;
     private int age;
     private String color;

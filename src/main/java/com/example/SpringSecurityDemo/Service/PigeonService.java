@@ -23,9 +23,9 @@ public class PigeonService implements PigeonServiceInterface {
     private BreederRepository breederRepository;
 
     @Override
-    public Pigeon addPigeon(Long breederId, Pigeon pigeon) {
+    public Pigeon addPigeon(String breederId, Pigeon pigeon) {
         // Find the breeder by ID
-        Breeder breeder = breederRepository.findById(breederId)
+        Breeder breeder = breederRepository.findByUserID(breederId)
                 .orElseThrow(() -> new RuntimeException("Breeder not found"));
 
        Pigeon pigeon1 = pigeonRepository.findByRingNumber(pigeon.getRingNumber()) ;
@@ -42,8 +42,10 @@ public class PigeonService implements PigeonServiceInterface {
 
 
     @Override
-    public List<Pigeon> getAllPigeons() {
-        return pigeonRepository.findAll();
+    public List<Pigeon> getAllPigeons(Long BreederID) {
+        List<Pigeon>  pigeons = pigeonRepository.findAllByBreederId(BreederID);
+        System.out.println("pigeons" + pigeons);
+        return pigeons ;
     }
 
     @Override

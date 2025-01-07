@@ -17,4 +17,6 @@ public interface IAccountService {
     Breeder updateUserRoles(Long userID, Set<Long> roleIds);
 
     ResponseEntity<Object> Login(LoginDto loginDto);
+
+    ResponseEntity<String> refreshToken();
 }

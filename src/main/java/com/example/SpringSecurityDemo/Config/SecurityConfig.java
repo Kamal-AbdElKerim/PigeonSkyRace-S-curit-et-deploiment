@@ -106,7 +106,8 @@ public class SecurityConfig {
                 .expiresAt(now.plusSeconds(24 * 3600)) // 1 day expiration
                 .subject(appUser.getUsername()) // Subject of the token
                 .claim("roles", roles)
-                .claim("email", appUser.getNomColombie()) // Add roles claim
+                .claim("userID", appUser.getUserID())
+                .claim("email", appUser.getNomColombie())
                 .build();
 
         // Encode the token

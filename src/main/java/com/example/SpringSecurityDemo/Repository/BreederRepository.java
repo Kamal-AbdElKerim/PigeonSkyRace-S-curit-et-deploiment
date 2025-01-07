@@ -9,5 +9,6 @@ public interface BreederRepository extends JpaRepository<Breeder,Long> {
 
     Breeder findByNomColombie(String username);
    Optional<Breeder>  findByUsername(String username);
+    Optional<Breeder>  findByUserID(String id);
 
 }

@@ -9,10 +9,10 @@ import java.util.Optional;
 public interface PigeonServiceInterface {
 
     // Add a new pigeon
-    Pigeon addPigeon(Long breederId, Pigeon pigeon);
+    Pigeon addPigeon(String breederId, Pigeon pigeon);
 
     // Get all pigeons
-    List<Pigeon> getAllPigeons();
+    List<Pigeon> getAllPigeons(Long BreederID);
 
     // Find pigeon by ring number
     Optional<Pigeon> getPigeonByRingNumber(Long ringNumber);

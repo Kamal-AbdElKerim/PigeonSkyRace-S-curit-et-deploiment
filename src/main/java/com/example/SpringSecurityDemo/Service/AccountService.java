@@ -23,6 +23,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import java.util.*;
 
 
@@ -35,7 +37,6 @@ public class AccountService implements IAccountService {
     private final UserMapper userMapper;
     private final AuthenticationManager authenticationManager;
     private final SecurityConfig securityConfiguration;
-
 
 
     @Override
@@ -98,6 +99,14 @@ public class AccountService implements IAccountService {
         return  userRepository.save(breeder);
 
 
+    }
+
+    @Override
+    public ResponseEntity<String> refreshToken() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Breeder breeder = userRepository.findByNomColombie(authentication.getName());
+        String newToken = securityConfiguration.createJwtToken(breeder);
+        return ResponseEntity.ok(newToken);
     }
 
     private ResponseEntity<Object> generateUserResponseDto(Breeder breeder) {

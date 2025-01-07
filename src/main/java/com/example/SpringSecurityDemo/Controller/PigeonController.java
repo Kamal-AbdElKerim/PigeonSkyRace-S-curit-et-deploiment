@@ -39,18 +39,16 @@ public class PigeonController {
     private final PigeonResponseDto pigeonDto ;
 
     // Add a new pigeon
-    @PostMapping()
+    @PostMapping("/{breederId}")
     public ResponseEntity<Pigeon> addPigeon(
 
-            @RequestBody Pigeon pigeon) {
+            @RequestBody Pigeon pigeon ,
+            @PathVariable String breederId) {
 
-        if (getAuthenticatedBreeder().isPresent()) {
-
-        Pigeon savedPigeon = pigeonService.addPigeon(getAuthenticatedBreeder().get().getId(), pigeon);
+        Pigeon savedPigeon = pigeonService.addPigeon(breederId,pigeon);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedPigeon);
-        }
 
-       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+
     }
 
     public Optional<Breeder> getAuthenticatedBreeder() {
@@ -108,18 +106,20 @@ public class PigeonController {
 
 
     // Get all pigeons
-    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping
-    public List<PigeonResponseDto> getAllPigeons() {
-        List<Pigeon> pigeons = pigeonService.getAllPigeons();
+
+    @GetMapping("/Breeder/{BreederID}")
+    public List<PigeonResponseDto> getAllPigeons(@PathVariable Long BreederID) {
+        List<Pigeon> pigeons = pigeonService.getAllPigeons(BreederID);
         List<PigeonResponseDto> pigeonDtos = new ArrayList<>();
 
-        System.out.println(pigeonDtos);
         for (Pigeon pigeon : pigeons) {
+            // Create a new instance of PigeonResponseDto for each pigeon
+            PigeonResponseDto pigeonDto = new PigeonResponseDto();
 
-
+            // Copy properties from Pigeon to PigeonResponseDto
             BeanUtils.copyProperties(pigeon, pigeonDto);
-            System.out.println("pigeonDto" + pigeon);
+
+            // Handle the Breeder object if it exists
             Breeder breeder = pigeon.getBreeder();
             if (breeder != null) {
                 BreederDto breederDto = new BreederDto();
@@ -127,11 +127,13 @@ public class PigeonController {
                 pigeonDto.setBreeder(breederDto);
             }
 
+            // Add the newly created pigeonDto to the list
             pigeonDtos.add(pigeonDto);
         }
 
         return pigeonDtos;
     }
+
 
     // Delete a pigeon by ring number
     @DeleteMapping("/{ringNumber}")

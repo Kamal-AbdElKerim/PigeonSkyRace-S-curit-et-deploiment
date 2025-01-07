@@ -46,14 +46,6 @@ pipeline {
                 }
             }
         }
-        stage('Generate Test Coverage Report') {
-            steps {
-                script {
-                    // Assuming JaCoCo plugin for code coverage
-                    sh 'mvn jacoco:report'
-                }
-            }
-        }
     }
     post {
         success {

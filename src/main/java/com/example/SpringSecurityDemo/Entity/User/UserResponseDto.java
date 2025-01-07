@@ -13,6 +13,7 @@ import java.util.Set;
 @Getter
 @Setter
 public class UserResponseDto {
+    private Long id;
     private String userID;
     private String username;
     private String nomColombie;

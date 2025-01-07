@@ -2,6 +2,7 @@ package com.example.SpringSecurityDemo.Controller;
 
 
 
+import com.example.SpringSecurityDemo.Config.SecurityConfig;
 import com.example.SpringSecurityDemo.Entity.Role.RoleUpdateRequest;
 import com.example.SpringSecurityDemo.Entity.User.Breeder;
 import com.example.SpringSecurityDemo.Entity.User.LoginDto;
@@ -21,6 +22,7 @@ import java.util.Set;
 public class AccountController {
 
     private final IAccountService accountService;
+
 
     @GetMapping("/current-user")
     public ResponseEntity<Object> getCurrentUser() {
@@ -49,4 +51,10 @@ public class AccountController {
            ) {
         return accountService.Login(loginDto) ;
     }
+
+    @GetMapping("/auth/refresh-token")
+    public ResponseEntity<String> refreshToken() {
+        return accountService.refreshToken() ;
+    }
+
 }

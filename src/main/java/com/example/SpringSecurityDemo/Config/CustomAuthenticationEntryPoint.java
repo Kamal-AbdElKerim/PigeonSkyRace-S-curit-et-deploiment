@@ -20,38 +20,55 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
-
     private final ObjectMapper objectMapper;
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+        // Log the error
 
-
+        // Customize the error message for different authentication errors
         ErrorMessageDTO errorMessageDTO = ErrorMessageDTO.builder()
-                .message("Authentication failed: Invalid email or password.")
+                .message("Authentication failed: Invalid credentials.Please check your email and password, and try again.")
                 .timestamp(new Date())
                 .code(HttpServletResponse.SC_UNAUTHORIZED)
                 .build();
 
-        String jsonResponse = objectMapper.writeValueAsString(errorMessageDTO);
+        // Handle specific authentication exceptions (like JWT expiration)
+//        if (authException instanceof JwtExpiredException) {
+//            errorMessageDTO = ErrorMessageDTO.builder()
+//                    .message("Authentication failed: JWT token expired.")
+//                    .timestamp(new Date())
+//                    .code(HttpServletResponse.SC_UNAUTHORIZED)
+//                    .build();
+//        }
 
+        // Send the error response
+        String jsonResponse = objectMapper.writeValueAsString(errorMessageDTO);
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType("application/json");
         response.getWriter().write(jsonResponse);
     }
 
     public void handleAccessDeniedException(HttpServletRequest request, HttpServletResponse response, AccessDeniedException ex) throws IOException {
+        // Log the access denied event
+
+        // Customize the error message for access denial
+        String message = "Access denied: You do not have permission to access this resource.";
+        if (request.getRequestURI().contains("/admin")) {
+            message = "Access denied: Admin role is required.";
+        }
 
         ErrorMessageDTO errorMessageDTO = ErrorMessageDTO.builder()
-                .message("Access denied: You do not have permission to access this resource.")
+                .message(message)
                 .timestamp(new Date())
-                .code(HttpServletResponse.SC_FORBIDDEN)  // 403 Status code
+                .code(HttpServletResponse.SC_FORBIDDEN)
                 .build();
 
+        // Send the error response
         String jsonResponse = objectMapper.writeValueAsString(errorMessageDTO);
-
-        response.setStatus(HttpServletResponse.SC_FORBIDDEN); // 403 status code
+        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         response.setContentType("application/json");
         response.getWriter().write(jsonResponse);
     }
 }
+
