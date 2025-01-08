@@ -12,13 +12,16 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -36,16 +39,15 @@ public class CompetitionPigeonController {
     private static final Logger logger = LoggerFactory.getLogger(CompetitionPigeonController.class);
 
     @PostMapping("/AddPigeonToCompetition")
-    public String addPigeonToCompetition(@Valid @RequestBody CompetitionPigeon competitionPigeon) {
-        logger.info("Received request to add pigeon to competition");
+    public ResponseEntity<Map<String, String>> addPigeonToCompetition(@Valid @RequestBody CompetitionPigeon competitionPigeon) {
 
-        competitionPigeonService.addPigeonToCompetition(
-                competitionPigeon
-        );
+        competitionPigeonService.addPigeonToCompetition(competitionPigeon);
 
-        logger.info("Pigeon added to competition successfully");
-        return "Competition added successfully!";
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Competition added successfully!");
+        return ResponseEntity.ok(response);
     }
+
 
     @GetMapping()
     public List<CompetitionPigeon> getAllPigeonEtCompetition() {
@@ -55,11 +57,19 @@ public class CompetitionPigeonController {
 
 
     @GetMapping("/{competitionId}/Start-competition")
-    public String StartCompetition(@PathVariable Long competitionId) {
-         competitionPigeonService.StartCompetition(competitionId);
+    public ResponseEntity<Map<String, String>> startCompetition(@PathVariable Long competitionId) {
+        // Call the service to start the competition
+        competitionPigeonService.StartCompetition(competitionId);
 
-          return "Competition Start!";
+        // Create a response body with a success message
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Competition started successfully!");
+        response.put("competitionId", String.valueOf(competitionId));
+
+        // Return the response with a 200 OK status
+        return ResponseEntity.ok(response);
     }
+
 
 
     @PostMapping("/pigeon/{ringNumber}/end-time")

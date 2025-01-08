@@ -29,11 +29,14 @@ public class CompetitionController {
     }
 
     @PostMapping()
-    public String addCompetition(@Valid @RequestBody CompetitionDTO competitionDTO) {
+    public ResponseEntity<Competition> addCompetition(@Valid @RequestBody CompetitionDTO competitionDTO) {
+        // Call the service to add the competition
+        Competition competition = competitionService.addCompetition(competitionDTO);
 
-        competitionService.addCompetition(competitionDTO);
-        return "Competition added successfully!" + competitionDTO.toString();
+        // Return the saved competition object as JSON with a 201 Created status
+        return ResponseEntity.status(HttpStatus.CREATED).body(competition);
     }
+
     @GetMapping("/End-Competition/{competitionid}")
     public ResponseEntity<Object> endCompetition(@PathVariable Long competitionid) {
 

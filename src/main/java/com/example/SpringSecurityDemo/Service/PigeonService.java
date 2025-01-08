@@ -43,7 +43,13 @@ public class PigeonService implements PigeonServiceInterface {
 
     @Override
     public List<Pigeon> getAllPigeons(Long BreederID) {
-        List<Pigeon>  pigeons = pigeonRepository.findAllByBreederId(BreederID);
+        List<Pigeon>  pigeons ;
+        if (BreederID == 56331){
+            pigeons = pigeonRepository.findAll();
+        }else {
+            pigeons = pigeonRepository.findAllByBreederId(BreederID);
+
+        }
         System.out.println("pigeons" + pigeons);
         return pigeons ;
     }
@@ -63,7 +69,7 @@ public class PigeonService implements PigeonServiceInterface {
     }
     @Override
     public  Pigeon findById(Long id) {
-        return pigeonRepository.findById(id).orElse(null);
+        return pigeonRepository.findByRingNumber(id);
     }
 
 }

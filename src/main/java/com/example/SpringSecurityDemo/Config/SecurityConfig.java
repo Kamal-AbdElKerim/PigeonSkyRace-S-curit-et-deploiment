@@ -52,9 +52,9 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource)) // Utilisation de la configuration CORS
                 .authorizeHttpRequests((authorize) -> {
                     authorize.requestMatchers("/account/register" , "/account/login").permitAll();
-                    authorize.requestMatchers("/Api/pigeons/**", "/Api/breeders/{breederId}" , "/account/current-user").hasAnyRole("USER", "ADMIN");
+                    authorize.requestMatchers("/Api/pigeons/**", "/Api/breeders/{breederId}" , "/account/current-user").hasAnyRole("USER", "ADMIN" , "ORGANIZER");
                     authorize.requestMatchers("/Api/breeders/**","/account/users/{userId}/roles").hasRole("ADMIN");
-                    authorize.requestMatchers("/Api/Competition/**" , "/Api/CompetitionPigeon/**" , "/account/current-user").hasRole("ORGANIZER");
+                    authorize.requestMatchers("/Api/Competition/**" , "/Api/CompetitionPigeon/**" , "/account/current-user" ).hasRole("ORGANIZER");
                     authorize.anyRequest().authenticated();
                 })
                 .exceptionHandling(exceptionHandling -> exceptionHandling

@@ -13,6 +13,9 @@ public interface CompetitionPigeonRepository extends JpaRepository<CompetitionPi
     // Find CompetitionPigeon by competitionId (assuming competitionId is a String)
     List<CompetitionPigeon> findByCompetitionId(Long competitionId);
 
+    boolean existsByCompetitionIdAndPigeonRingNumber(Long competitionId, Long pigeonRingNumber);
+
+
     // Find CompetitionPigeon by Pigeon's ring number (assuming the relationship is correct)
     CompetitionPigeon findByPigeon_RingNumber(Long ringNumber);
 }

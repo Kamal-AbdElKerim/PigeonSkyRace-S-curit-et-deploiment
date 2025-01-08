@@ -32,28 +32,36 @@ public class CompetitionPigeonService implements ICompetitionPigeonService {
 
 
 @Override
-    public void addPigeonToCompetition( CompetitionPigeon competitionPigeon) {
+public void addPigeonToCompetition(CompetitionPigeon competitionPigeon) {
 
-        Competition competition = competitionRepository.findById(competitionPigeon.getCompetition().getId())
-                .orElseThrow(() -> new EntityNotFoundException("Competition","Competition not found with ID: "
-                        + competitionPigeon.getCompetition().getId()));
+    // Fetch competition by ID or throw an exception if not found
+    Competition competition = competitionRepository.findById(competitionPigeon.getCompetition().getId())
+            .orElseThrow(() -> new EntityNotFoundException("Competition", "Competition not found with ID: "
+                    + competitionPigeon.getCompetition().getId()));
 
-        Pigeon pigeon = pigeonService.findById(competitionPigeon.getPigeon().getRingNumber());
-        if (pigeon == null) {
-            throw new EntityNotFoundException("pigeon","Pigeon not found with ring number: "
-                    + competitionPigeon.getPigeon().getRingNumber());
-        }
-
-        competitionPigeon.setCompetition(competition);
-        competitionPigeon.setPigeon(pigeon);
-
-
-
-        competitionPigeonRepository.save(competitionPigeon);
-
-
-
+    // Fetch pigeon by ring number or throw an exception if not found
+    Pigeon pigeon = pigeonService.findById(competitionPigeon.getPigeon().getRingNumber());
+    if (pigeon == null) {
+        throw new EntityNotFoundException("Pigeon", "Pigeon not found with ring number: "
+                + competitionPigeon.getPigeon().getRingNumber());
     }
+
+    // Check if this pigeon is already associated with the competition
+    boolean exists = competitionPigeonRepository.existsByCompetitionIdAndPigeonRingNumber(
+            competition.getId(),
+            pigeon.getRingNumber()
+    );
+    if (exists) {
+        throw new EntityNotFoundException("Pigeon","This pigeon is already registered for the competition!");
+    }
+
+    // Set competition and pigeon in the entity
+    competitionPigeon.setCompetition(competition);
+    competitionPigeon.setPigeon(pigeon);
+
+    // Save the entity
+    competitionPigeonRepository.save(competitionPigeon);
+}
 
     public static double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
         final int R = 6371;
